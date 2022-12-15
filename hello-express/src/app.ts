@@ -18,6 +18,12 @@ class App {
     })
   }
 
+  public mini_test() {
+    this.app.get('/test', (req, res) => {
+
+    })
+  }
+
   public listen() {
     this.app.listen(this.port, () => {
       console.log(`
