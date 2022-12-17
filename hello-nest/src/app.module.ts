@@ -7,10 +7,11 @@ import { UsersModule } from './users/users.module';
 import { UsersService } from './users/users.service';
 import {JwtModule, JwtService} from "@nestjs/jwt";
 import { MoviesController } from './movies/movies.controller';
+import { MoviesService } from './movies/movies.service';
 
 @Module({
   imports: [AuthModule, UsersModule, JwtModule],
   controllers: [AppController, MoviesController],
-  providers: [AppService, AuthService, UsersService, JwtService],
+  providers: [AppService, AuthService, UsersService, JwtService, MoviesService],
 })
 export class AppModule {}
