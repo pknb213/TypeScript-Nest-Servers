@@ -6,12 +6,10 @@ import { AuthService} from "./auth/auth.service";
 import { UsersModule } from './users/users.module';
 import { UsersService } from './users/users.service';
 import {JwtModule, JwtService} from "@nestjs/jwt";
-import { MoviesController } from './movies/movies.controller';
-import { MoviesService } from './movies/movies.service';
-
+import { MoviesModule } from './movies/movies.module';
 @Module({
-  imports: [AuthModule, UsersModule, JwtModule],
-  controllers: [AppController, MoviesController],
-  providers: [AppService, AuthService, UsersService, JwtService, MoviesService],
+  imports: [AuthModule, UsersModule, JwtModule, MoviesModule],
+  controllers: [AppController],
+  providers: [AppService, AuthService, UsersService, JwtService],
 })
 export class AppModule {}
