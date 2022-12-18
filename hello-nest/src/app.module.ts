@@ -10,6 +10,6 @@ import { MoviesModule } from './movies/movies.module';
 @Module({
   imports: [AuthModule, UsersModule, JwtModule, MoviesModule],
   controllers: [AppController],
-  providers: [AppService, AuthService, UsersService, JwtService],
+  providers: [AppService],
 })
 export class AppModule {}
