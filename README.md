@@ -9,6 +9,6 @@ OS: Mac 12
 ## Nest
 
 ## Test
-Jest
+Jest, Mock
 ### Unit Test
 ### E2E Test
