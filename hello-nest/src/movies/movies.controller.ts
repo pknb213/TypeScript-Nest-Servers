@@ -1,6 +1,6 @@
 import {Body, Controller, Delete, Get, Param, Patch, Post, Query} from '@nestjs/common';
 import * as querystring from "querystring";
-import { Movie } from 'src/movies/entitys/movie.entity';
+import { Movie } from '../../src/movies/entitys/movie.entity';
 import {MoviesService} from "./movies.service";
 import {CreateMovieDto} from "./dto/create_movie.dto";
 import {UpdateMovieDto} from "./dto/update_movie.dto";
@@ -25,7 +25,7 @@ export class MoviesController {
     // }
 
     @Get(":id")
-    getOne(@Param("id") movieId: number) { // Todo: 왜 Movie쓰면 모듈 에러나지?
+    getOne(@Param("id") movieId: number): Movie { // Todo: 왜 Movie쓰면 모듈 에러나지?
         return this.moviesService.getOne(movieId)
     }
 
