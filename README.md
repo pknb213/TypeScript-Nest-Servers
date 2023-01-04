@@ -1,6 +1,8 @@
 # TypeScript-Servers
 Typescript와 Nest 및 Express framework 이용한 Server Repos.
 
+#...Now Studying...
+
 # Env
 OS: Mac 12
 
