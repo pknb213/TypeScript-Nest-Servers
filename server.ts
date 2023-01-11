@@ -7,37 +7,48 @@ const typeDefs = `#graphql
   # This "Book" type defines the queryable fields for every book in our data source.
   type User {
     id: ID
-    username: String
+      username: String
   }
   
-  # Fucking
-  type Tweet {
+# Fucking
+type Tweet {
     id: ID
     text: String
     author: User
-    
-  }
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
-  type Query {
+}
+# Query~
+type Query {
     allTweets: [Tweet]
-  }
+    tweet(id: ID): Tweet
+}
+# Mutation~
+type Mutation{
+    postTweet(text: String, userId: ID): Tweet
+    deleteTweet(id:ID): Boolean
+}
 `;
-const books = [
+const tweets = [
     {
-        title: 'The Awakening',
-        author: 'Kate Chopin',
+        id: '1',
+        text: 'Happy Hello World',
+        author: {
+            id: 1,
+            username: 'Kate Chopin'
+        }
     },
     {
-        title: 'City of Glass',
-        author: 'Paul Auster',
+        id: '2',
+        text: 'Molponica',
+        author: {
+            id: 1,
+            username: 'Paul Auster'
+        }
     },
 ];
 const resolvers = {
     Query: {
-        books: () => books,
+        allTweets: () => tweets,
     },
 };
 
