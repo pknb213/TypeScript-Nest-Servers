@@ -2,41 +2,53 @@ import {ApolloServer} from "@apollo/server"
 import {startStandaloneServer} from "@apollo/server/standalone";
 
 const typeDefs = `#graphql
-  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
+# Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
-    title: String
-    author: String
-  }
-  
-  # Fucking
-  type Tweet {
+# This "Book" type defines the queryable fields for every book in our data source.
+type User {
+    id: ID
+    username: String
+}
+
+# Fucking
+type Tweet {
+    id: ID
     text: String
-    
-  }
+    author: User
 
-  # The "Query" type is special: it lists all of the available queries that
-  # clients can execute, along with the return type for each. In this
-  # case, the "books" query returns an array of zero or more Books (defined above).
-  type Query {
-    books: [Book],
-    tweet: [Tweet]
-  }
+}
+# Query~
+type Query {
+    allTweets: [Tweet]
+    tweet(id: ID): Tweet
+}
+# Mutation~
+type Mutation{
+    postTweet(text: String, userId: ID): Tweet
+    deleteTweet(id:ID): Boolean
+}
 `;
-const books = [
+const tweets = [
     {
-        title: 'The Awakening',
-        author: 'Kate Chopin',
+        id: '1',
+        text: 'Happy Hello World',
+        author: {
+            id: 1,
+            username: 'Kate Chopin'
+        }
     },
     {
-        title: 'City of Glass',
-        author: 'Paul Auster',
+        id: '2',
+        text: 'Molponica',
+        author: {
+            id: 1,
+            username: 'Paul Auster'
+        }
     },
 ];
 const resolvers = {
     Query: {
-        books: () => books,
+        allTweets: () => tweets,
     },
 };
 
