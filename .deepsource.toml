@@ -1,5 +1,5 @@
 version = 1
 
 [[analyzers]]
-name = "typescript"
+name = "javascript"
 enabled = true
