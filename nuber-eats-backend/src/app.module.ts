@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import {GraphQLModule} from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import {TypeOrmModule} from "@nestjs/typeorm";
+import { RestaurantModule } from './restaurant/restaurant.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import {TypeOrmModule} from "@nestjs/typeorm";
           database: 'nuber-eats',
           synchronize: true,
           logging: true,
-      })
+      }),
+      RestaurantModule
   ],
   controllers: [],
   providers: [],
