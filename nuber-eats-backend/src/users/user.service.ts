@@ -1,36 +1,40 @@
 import {InjectRepository} from "@nestjs/typeorm";
 import {Repository} from "typeorm";
-import { User } from "./entities/user.entity";
+import {User} from "./entities/user.entity";
 import {Injectable} from "@nestjs/common";
 import {CreateAccountInput} from "./dtos/create-account.dto";
 import {LoginInput} from "./dtos/login.dto";
 import {ConfigService} from "@nestjs/config";
 import * as jwt from 'jsonwebtoken'
 import {JwtService} from "../jwt/jwt.service";
+import {EditProfileInput} from "./dtos/edit-profile.dto";
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User) private readonly users: Repository<User>,
         private readonly jwtService: JwtService,
-    ) {}
+    ) {
+    }
+
     async createAccount(
         {email, password, role}: CreateAccountInput
-    ): Promise<{ok:boolean, error?:string}> {
+    ): Promise<{ ok: boolean, error?: string }> {
         // chek new user
         // create user & hash the passwrd
         try {
             const exists = await this.users.findOne({where: {email}})
             if (exists) {
-                return {ok:false, error:"There is User with that email already"}
+                return {ok: false, error: "There is User with that email already"}
             }
             await this.users.save(this.users.create({email, password, role}))
-            return {ok:true}
+            return {ok: true}
         } catch (e) {
-            return {ok:false, error:"Couldn't create account"}
+            return {ok: false, error: "Couldn't create account"}
         }
     }
-    async login({email, password}: LoginInput): Promise<{ok:boolean, error?:string, token?: string}> {
+
+    async login({email, password}: LoginInput): Promise<{ ok: boolean, error?: string, token?: string }> {
         // find the user with email
         // check if the passwrod
         // make jwt
@@ -61,7 +65,22 @@ export class UsersService {
             }
         }
     }
+
     async findById(id: number): Promise<User> {
         return this.users.findOne({where: {id}})
+    }
+
+    async editProfile(
+        userId: number,
+        {email, password}: EditProfileInput
+    ): Promise<User> {
+        const user = await this.users.findOne({where: {id: userId}})
+        if (email) {
+            user.email = email
+        }
+        if (password) {
+            user.password = password
+        }
+        return this.users.save(user)
     }
 }
