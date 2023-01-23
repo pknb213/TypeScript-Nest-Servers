@@ -90,4 +90,14 @@ export class UsersService {
         }
         return this.users.save(user)
     }
+
+    async verifyEmail(code: string): Promise<boolean> {
+        const verification = await this.verifications.findOne(({where: {code}, relations: ['user']}))
+        if(verification) {
+            console.log(verification, verification.user)
+            verification.user.verified = true
+            await this.users.save(verification.user)
+        }
+        return false
+    }
 }
