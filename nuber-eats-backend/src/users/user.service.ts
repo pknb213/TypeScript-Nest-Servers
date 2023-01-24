@@ -7,8 +7,10 @@ import {LoginInput} from "./dtos/login.dto";
 import {ConfigService} from "@nestjs/config";
 import * as jwt from 'jsonwebtoken'
 import {JwtService} from "../jwt/jwt.service";
-import {EditProfileInput} from "./dtos/edit-profile.dto";
+import {EditProfileInput, EditProfileOutput} from "./dtos/edit-profile.dto";
 import {Verification} from "./entities/verfication.entity";
+import {UserProfileOutput} from "./dtos/user-profile.dto";
+import {VerifyEmailOutput} from "./dtos/verify-email.dto";
 
 @Injectable()
 export class UsersService {
@@ -71,39 +73,69 @@ export class UsersService {
         }
     }
 
-    async findById(id: number): Promise<User> {
-        return this.users.findOne({where: {id}})
+    async findById(id: number): Promise<UserProfileOutput> {
+        try {
+            const user = await this.users.findOne({where: {id}})
+            if(user) {
+                return {
+                    ok: true,
+                    user: user
+                }
+            }
+        } catch (error) {
+            return {
+                ok: false,
+                error
+            }
+        }
     }
 
     async editProfile(
         userId: number,
         {email, password}: EditProfileInput
-    ): Promise<User> {
-        const user = await this.users.findOne({where: {id: userId}})
-        if (email) {
-            user.email = email
-            user.verified = false
-            await this.verifications.save(this.verifications.create({user}))
+    ): Promise<EditProfileOutput> {
+        try {
+            const user = await this.users.findOne({where: {id: userId}})
+            if (email) {
+                user.email = email
+                user.verified = false
+                await this.verifications.save(this.verifications.create({user}))
+            }
+            if (password) {
+                user.password = password
+            }
+            await this.users.save(user)
+            return {
+                ok: true,
+            }
+        } catch (error) {
+            return {
+                ok: false,
+                error
+            }
         }
-        if (password) {
-            user.password = password
-        }
-        return this.users.save(user)
     }
 
-    async verifyEmail(code: string): Promise<boolean> {
+    async verifyEmail(code: string): Promise<VerifyEmailOutput> {
         try {
            const verification = await this.verifications.findOne(({where: {code}, relations: ['user']}))
             if(verification) {
                 console.log(verification, verification.user)
                 verification.user.verified = true
                 await this.users.save(verification.user)
-                return true
+                return {
+                    ok: true,
+                }
             }
-            throw new Error()
+            return {
+                ok: false,
+                error: "Verification Is False"
+            }
         } catch(error) {
-            console.log(error)
-            return false
+            return {
+                ok: false,
+                error
+            }
         }
     }
 }
