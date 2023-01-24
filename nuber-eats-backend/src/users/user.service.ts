@@ -44,7 +44,7 @@ export class UsersService {
         // check if the passwrod
         // make jwt
         try {
-            const user = await this.users.findOne({where: {email}})
+            const user = await this.users.findOne({where: {email}, select: ["id", "password"]})
             if (!user) {
                 return {
                     ok: false,
@@ -92,12 +92,18 @@ export class UsersService {
     }
 
     async verifyEmail(code: string): Promise<boolean> {
-        const verification = await this.verifications.findOne(({where: {code}, relations: ['user']}))
-        if(verification) {
-            console.log(verification, verification.user)
-            verification.user.verified = true
-            await this.users.save(verification.user)
+        try {
+           const verification = await this.verifications.findOne(({where: {code}, relations: ['user']}))
+            if(verification) {
+                console.log(verification, verification.user)
+                verification.user.verified = true
+                await this.users.save(verification.user)
+                return true
+            }
+            throw new Error()
+        } catch(error) {
+            console.log(error)
+            return false
         }
-        return false
     }
 }
