@@ -11,6 +11,7 @@ import {EditProfileInput, EditProfileOutput} from "./dtos/edit-profile.dto";
 import {Verification} from "./entities/verfication.entity";
 import {UserProfileOutput} from "./dtos/user-profile.dto";
 import {VerifyEmailOutput} from "./dtos/verify-email.dto";
+import {MailService} from "../mail/mail.service";
 
 @Injectable()
 export class UsersService {
@@ -18,6 +19,7 @@ export class UsersService {
         @InjectRepository(User) private readonly users: Repository<User>,
         @InjectRepository(Verification) private readonly verifications: Repository<Verification>,
         private readonly jwtService: JwtService,
+        private readonly mailService: MailService,
     ) {
     }
 
@@ -32,9 +34,10 @@ export class UsersService {
                 return {ok: false, error: "There is User with that email already"}
             }
             const user = await this.users.save(this.users.create({email, password, role}))
-            await this.verifications.save(this.verifications.create({
+            const verification = await this.verifications.save(this.verifications.create({
                 user
             }))
+            this.mailService.sendVerificationEmail(user.email, verification.code)
             return {ok: true}
         } catch (e) {
             return {ok: false, error: "Couldn't create account"}
@@ -99,7 +102,8 @@ export class UsersService {
             if (email) {
                 user.email = email
                 user.verified = false
-                await this.verifications.save(this.verifications.create({user}))
+                const verification = await this.verifications.save(this.verifications.create({user}))
+                this.mailService.sendVerificationEmail(user.email, verification.code)
             }
             if (password) {
                 user.password = password
@@ -120,9 +124,9 @@ export class UsersService {
         try {
            const verification = await this.verifications.findOne(({where: {code}, relations: ['user']}))
             if(verification) {
-                console.log(verification, verification.user)
                 verification.user.verified = true
                 await this.users.save(verification.user)
+                await this.users.delete(verification.id)
                 return {
                     ok: true,
                 }
