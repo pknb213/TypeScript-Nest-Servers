@@ -6,6 +6,8 @@ Typescript와 Nest 및 Express framework 이용한 Server Repos.
 
 OS: Mac 12
 
+DB: Postgres
+
 ## Express
 
 TBD
@@ -21,6 +23,18 @@ Jest, Mock
 ### Unit Test
 
 ### E2E Test
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 mutation {
