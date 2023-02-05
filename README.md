@@ -41,30 +41,32 @@ Jest, Mock
 
 
 
+# mutation {
+# 	login(input: {
+#     email: "yj@naver.com",
+#     password: "1234",
+#     role: Client
+#   }) {
+#     ok,
+#     error,
+#     token
+#   }
+# }
+
 mutation {
-  verifyEmail(input: {
-    code: "29514543-9fbb-4d12-9554-919d8d0dbc7b"
+  editProfile(input: {
+    email: "yj@naver.com",
+    password: "1234"
   }) {
-    ok,
-    error
+    error, ok
   }
 }
 
 # mutation {
-#   editProfile(input: {
+#   createAccount(input: {
 #     email: "yj@naver.com",
 #     password: "1234"
 #   }) {
-#     error, ok
-#   }
-# }
-
-
-# mutation {
-#   login(input: {
-#     email: "yj@naver.com",
-#     password: "1234"
-#   }) {
-# 		ok,error,token
+#     error,ok
 #   }
 # }
