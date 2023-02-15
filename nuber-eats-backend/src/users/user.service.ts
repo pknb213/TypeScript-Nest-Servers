@@ -83,7 +83,8 @@ export class UsersService {
 
     async findById(id: number): Promise<UserProfileOutput> {
         try {
-            const user = await this.users.findOneOrFail({where: {id}})
+            const user = await this.users.findOneBy({id})
+            if (!user) return {ok: false, error: "User Not Found", user: user}
             return {
                 ok: true,
                 user: user
