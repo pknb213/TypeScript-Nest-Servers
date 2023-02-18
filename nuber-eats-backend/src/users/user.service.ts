@@ -106,6 +106,7 @@ export class UsersService {
             if (email) {
                 user.email = email
                 user.verified = false
+                this.verifications.delete({user: {id: user.id}})
                 const verification = await this.verifications.save(this.verifications.create({user}))
                 this.mailService.sendVerificationEmail(user.email, verification.code)
             }
@@ -126,8 +127,8 @@ export class UsersService {
 
     async verifyEmail(code: string): Promise<VerifyEmailOutput> {
         try {
-           const verification = await this.verifications.findOne(({where: {code}, relations: ['user']}))
-            if(verification) {
+            const verification = await this.verifications.findOne(({where: {code}, relations: ['user']}))
+            if (verification) {
                 verification.user.verified = true
                 await this.users.save(verification.user)
                 await this.users.delete(verification.id)
@@ -139,7 +140,7 @@ export class UsersService {
                 ok: false,
                 error: "Verification Is False"
             }
-        } catch(error) {
+        } catch (error) {
             return {
                 ok: false,
                 error: "Could not verify email"
