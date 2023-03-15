@@ -14,6 +14,8 @@ import { AuthModule } from './auth/auth.module';
 import {Verification} from "./users/entities/verfication.entity";
 import { MailModule } from './mail/mail.module';
 import * as process from "process";
+import {Restaurant} from "./restaurant/entities/restaurant.entity";
+import {Category} from "./restaurant/entities/category.entiey";
 
 
 @Module({
@@ -44,14 +46,13 @@ import * as process from "process";
           database: process.env.DB_NAME,
           synchronize: process.env.NODE_ENV !== 'prod',
           logging: process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
-          entities: [User, Verification]
+          entities: [User, Verification, Restaurant, Category]
       }),
       GraphQLModule.forRoot({
           driver: ApolloDriver,
           autoSchemaFile: true,
           context: ({req}) => ({user: req['user']}),
       }),
-      RestaurantModule,
       JwtModule.forRoot({
           privateKey: process.env.PRIVATE_KEY,
       }),
@@ -61,6 +62,7 @@ import * as process from "process";
          domain: process.env.MAILGUN_FROM_EMAIL
       }),
       UsersModule,
+      RestaurantModule,
   ],
   controllers: [],
   providers: [],
