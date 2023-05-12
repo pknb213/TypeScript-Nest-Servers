@@ -5,10 +5,10 @@ import * as bcrypt from "bcrypt"
 import {InternalServerErrorException} from "@nestjs/common";
 import {IsEmail, IsEnum} from "class-validator";
 import {Restaurant} from "../../restaurant/entities/restaurant.entity";
-enum UserRole {
-    Client,
-    Owner,
-    Delivery,
+export enum UserRole {
+    Client = 'Client',
+    Owner = 'Owner',
+    Delivery = 'Delivery',
 }
 
 registerEnumType(UserRole, {name: 'UserRole'})
