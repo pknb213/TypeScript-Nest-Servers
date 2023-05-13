@@ -6,6 +6,7 @@ import {AuthUser} from "../auth/auth-user.decorator";
 import {User, UserRole} from "../users/entities/user.entity";
 import {SetMetadata} from "@nestjs/common";
 import {Role} from "../auth/role.decorator";
+import {EditRestaurantInput, EditRestaurantOutput} from "./dtos/edit-restaurant.dto";
 @Resolver(of => Restaurant)
 export class RestaurantResolver {
     constructor(private readonly restaurantService: RestaurantService) {}
@@ -20,5 +21,14 @@ export class RestaurantResolver {
             createRestaurantInput
         )
 
+    }
+
+    @Mutation(returns => EditRestaurantOutput)
+    @Role(['Owner'])
+    async editRestaurant(
+        @AuthUser() authUser: User,
+        @Args('input') editRestaurantInput: EditRestaurantInput
+    ): Promise<EditRestaurantOutput> {
+        return {ok: true}
     }
 }
