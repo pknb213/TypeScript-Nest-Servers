@@ -7,6 +7,7 @@ import {User} from "../users/entities/user.entity";
 import {Category} from "./entities/category.entiey";
 import {EditRestaurantInput, EditRestaurantOutput} from "./dtos/edit-restaurant.dto";
 import {CategoryRepository} from "./repositories/category.reposigory";
+import {DeleteRestaurantInput, DeleteRestaurantOutput} from "./dtos/delete-restaurant.dto";
 
 @Injectable()
 export class RestaurantService {
@@ -43,14 +44,53 @@ export class RestaurantService {
         owner: User,
         editRestaurantInput: EditRestaurantInput
     ): Promise<EditRestaurantOutput> {
-        const restaurant = await this.restaurants.findOne(
-            {
-                where: {id: editRestaurantInput.restaurantId},
-                loadRelationIds: true
-            },
-        )
-        if (!restaurant) return {ok: true}
-        if (owner.id !== restaurant.ownerId) return {ok: false, error: "You can't edit a restaurant then you don't own"}
-        return {ok: false, error: "Could not restaurant"}
+        try {
+            const restaurant = await this.restaurants.findOne(
+                {
+                    where: {id: editRestaurantInput.restaurantId},
+                    loadRelationIds: true
+                },
+            )
+            if (!restaurant) return {ok: true}
+            if (owner.id !== restaurant.ownerId) return {
+                ok: false,
+                error: "You can't edit a restaurant then you don't own"
+            }
+            let category: Category = null
+            if (editRestaurantInput.categoryName) category = await this.categories.getOrCreate(
+                editRestaurantInput.categoryName
+            )
+            await this.restaurants.save([{
+                id: editRestaurantInput.restaurantId,
+                ...editRestaurantInput,
+                ...(category && {category})
+            }])
+            return {ok: true}
+        } catch {
+            return {ok: false, error: "Could not restaurant"}
+        }
+    }
+
+    async deleteRestaurant(
+        owner: User,
+        {restaurantId}: DeleteRestaurantInput
+    ): Promise<DeleteRestaurantOutput> {
+        try {
+            const restaurant = await this.restaurants.findOne(
+                {
+                    where: {id: restaurantId.restaurantId},
+                    loadRelationIds: true
+                },
+            )
+            if (!restaurant) return {ok: true}
+            if (owner.id !== restaurant.ownerId) return {
+                ok: false,
+                error: "You can't delete a restaurant then you don't own"
+            }
+            await this.restaurants.delete(restaurantId)
+            return {ok: true}
+        } catch {
+            return {ok: false, error: "Could not restaurant"}
+        }
     }
 }
