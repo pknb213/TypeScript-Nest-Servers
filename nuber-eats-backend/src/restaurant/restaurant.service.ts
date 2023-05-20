@@ -8,13 +8,14 @@ import {Category} from "./entities/category.entiey";
 import {EditRestaurantInput, EditRestaurantOutput} from "./dtos/edit-restaurant.dto";
 import {CategoryRepository} from "./repositories/category.reposigory";
 import {DeleteRestaurantInput, DeleteRestaurantOutput} from "./dtos/delete-restaurant.dto";
+import {AllCategoriesOutput} from "./dtos/all-categories.dto";
 
 @Injectable()
 export class RestaurantService {
     constructor(
         @InjectRepository(Restaurant)
         private readonly restaurants: Repository<Restaurant>,
-        @InjectRepository(Category)
+        @InjectRepository(CategoryRepository)
         private readonly categories: CategoryRepository
     ) {
     }
@@ -78,7 +79,7 @@ export class RestaurantService {
         try {
             const restaurant = await this.restaurants.findOne(
                 {
-                    where: {id: restaurantId.restaurantId},
+                    where: {id: restaurantId},
                     loadRelationIds: true
                 },
             )
@@ -92,5 +93,18 @@ export class RestaurantService {
         } catch {
             return {ok: false, error: "Could not restaurant"}
         }
+    }
+
+    async allCategories(): Promise<AllCategoriesOutput> {
+        try {
+            const categories = await this.categories.find()
+
+            return {ok: true}
+        } catch {
+            return {ok: false, error: "Could not road categories"}
+        }
+    }
+    async countRestaurant(category: Category): Promise<number> {
+        return this.restaurants.count({where: category })
     }
 }

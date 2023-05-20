@@ -1,14 +1,12 @@
-import {Field, InputType, ObjectType, PickType} from "@nestjs/graphql";
-import {Restaurant} from "../entities/restaurant.entity";
+import {Field, InputType, ObjectType} from "@nestjs/graphql";
 import {CoreOutput} from "../../common/dtos/output.dto";
 
 @InputType()
-export class DeleteRestaurantInput extends PickType(Restaurant, [
-
-]) {
-    @Field(type => String)
-    deleteName: string
+export class DeleteRestaurantInput {
+    @Field(type => Number)
+    restaurantId: number
 }
 
 @ObjectType()
-export class DeleteRestaurantOutput extends CoreOutput {}
+export class DeleteRestaurantOutput extends CoreOutput {
+}
