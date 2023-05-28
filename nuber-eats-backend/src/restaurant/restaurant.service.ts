@@ -10,6 +10,8 @@ import {CategoryRepository} from "./repositories/category.reposigory";
 import {DeleteRestaurantInput, DeleteRestaurantOutput} from "./dtos/delete-restaurant.dto";
 import {AllCategoriesOutput} from "./dtos/all-categories.dto";
 import {CategoryInput, CategoryOutput} from "./dtos/category.dto";
+import {take} from "rxjs";
+import {RestaurantInput, RestaurantOutput} from "./dtos/restaurant.dto";
 
 @Injectable()
 export class RestaurantService {
@@ -105,20 +107,57 @@ export class RestaurantService {
             return {ok: false, error: "Could not road categories"}
         }
     }
+
     async countRestaurant(category: Category): Promise<number> {
-        return this.restaurants.count({where: category })
+        return this.restaurants.count({where: category})
     }
 
-    async findCategoryBySlug({slug}: CategoryInput): Promise<CategoryOutput> {
+    async findCategoryBySlug({slug, page}: CategoryInput): Promise<CategoryOutput> {
         try {
             const category = await this.categories.findOne(
-                {where: {slug}, relations: ["restaurants"]
+                {
+                    where: {slug}, relations: ["restaurants"]
                 }
             )
-            if(!category) return {ok: false, error: "Category not found"}
-           return {ok: true, category}
+            if (!category) return {ok: false, error: "Category not found"}
+            const restaurant = await this.restaurants.find(
+                {
+                    where: {
+                        category: {
+                            id: category.id,
+                        },
+                    },
+                    take: 25,
+                    skip: (page - 1) * 25
+                }
+            )
+            category.restaurants = restaurant
+            const totalResults = await this.countRestaurant(category)
+            return {ok: true, category, totalPages: Math.ceil(totalResults / 25)}
         } catch (e) {
             return {ok: false, error: "Could not road category"}
+        }
+    }
+
+    async allRestaurants({page}: RestaurantInput): Promise<RestaurantOutput> {
+        try {
+            const [restaurants, totalResults] = await this.restaurants.findAndCount(
+                {
+                    skip: (page - 1) * 25,
+                    take: 25
+                }
+            )
+            return {
+                ok: true,
+                results: restaurants,
+                totalPages: Math.ceil(totalResults / 25),
+                totalResults
+            }
+        } catch {
+            return {
+                ok: false,
+                error: "Could not load restaurants"
+            }
         }
     }
 }
