@@ -12,6 +12,7 @@ import {AllCategoriesOutput} from "./dtos/all-categories.dto";
 import {CategoryInput, CategoryOutput} from "./dtos/category.dto";
 import {take} from "rxjs";
 import {RestaurantInput, RestaurantOutput} from "./dtos/restaurant.dto";
+import {RestaurantsInput, RestaurantsOutput} from "./dtos/restaurants.dto";
 
 @Injectable()
 export class RestaurantService {
@@ -139,7 +140,7 @@ export class RestaurantService {
         }
     }
 
-    async allRestaurants({page}: RestaurantInput): Promise<RestaurantOutput> {
+    async allRestaurants({page}: RestaurantsInput): Promise<RestaurantsOutput> {
         try {
             const [restaurants, totalResults] = await this.restaurants.findAndCount(
                 {
@@ -157,6 +158,32 @@ export class RestaurantService {
             return {
                 ok: false,
                 error: "Could not load restaurants"
+            }
+        }
+    }
+
+    async findRestaurantById({
+        restaurantId,
+    }: RestaurantInput): Promise<RestaurantOutput> {
+        try {
+            const restaurant = await this.restaurants.findOne({
+                    where: {id: restaurantId},
+                    loadRelationIds: true
+                },)
+            if (!restaurant) {
+                return {
+                    ok: false,
+                    error: "Restaurant not found",
+                }
+            }
+            return {
+                ok: true,
+                restaurant,
+            }
+        } catch {
+            return {
+                ok: false,
+                error: "Could not find restaurant."
             }
         }
     }
