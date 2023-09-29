@@ -19,8 +19,7 @@ export class RestaurantService {
     constructor(
         @InjectRepository(Restaurant)
         private readonly restaurants: Repository<Restaurant>,
-        @InjectRepository(CategoryRepository)
-        private readonly categories: CategoryRepository
+        private categories: CategoryRepository
     ) {
     }
 
@@ -31,16 +30,20 @@ export class RestaurantService {
         try {
             const newRestaurant = this.restaurants.create(createRestaurantInput)
             newRestaurant.owner = owner
+            console.log("\n>>", newRestaurant)
             const category = await this.categories.getOrCreate(createRestaurantInput.categoryName)
+            console.log("\n>>", category)
             newRestaurant.category = category
             await this.restaurants.save(newRestaurant)
             return {
                 ok: true,
             }
         } catch (error) {
+            console.log(error)
             return {
                 ok: false,
-                error: "Could not create restaurant"
+                // error: error
+                error: "Could not create restaurant",
             }
         }
     }

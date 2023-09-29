@@ -4,10 +4,12 @@ import {TypeOrmModule} from "@nestjs/typeorm";
 import {Restaurant} from "./entities/restaurant.entity";
 import {RestaurantService} from "./restaurant.service";
 import {CategoryRepository} from "./repositories/category.reposigory";
+import {TypeOrmExModule} from "../common/typeorm.module";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Restaurant, CategoryRepository])
+        TypeOrmModule.forFeature([Restaurant]),
+        TypeOrmExModule.forCustomRepository([CategoryRepository])
     ],
     providers: [RestaurantResolver, CategoryResolver, RestaurantService]
 })

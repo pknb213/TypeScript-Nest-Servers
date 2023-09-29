@@ -8,9 +8,8 @@ import {Restaurant} from "./restaurant.entity";
 @ObjectType()
 @Entity()
 export class Category extends CoreEntity{
-
     @Field(is => String)
-    @Column()
+    @Column({unique: true})
     @IsString()
     @Length(5)
     name: string
