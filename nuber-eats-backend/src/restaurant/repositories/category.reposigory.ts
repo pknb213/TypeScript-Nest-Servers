@@ -1,6 +1,6 @@
 import {Injectable} from "@nestjs/common";
 import {DataSource, Repository} from "typeorm";
-import {Category} from "../entities/category.entiey";
+import {Category} from "../entities/category.entity";
 import {CustomRepository} from "../../common/custom-repository.decorator";
 
 @CustomRepository(Category)

@@ -7,7 +7,7 @@ import {User} from "../users/entities/user.entity";
 import {Role} from "../auth/role.decorator";
 import {EditRestaurantInput, EditRestaurantOutput} from "./dtos/edit-restaurant.dto";
 import {DeleteRestaurantInput, DeleteRestaurantOutput} from "./dtos/delete-restaurant.dto";
-import {Category} from "./entities/category.entiey";
+import {Category} from "./entities/category.entity";
 import {AllCategoriesOutput} from "./dtos/all-categories.dto";
 import {CategoryInput, CategoryOutput} from "./dtos/category.dto";
 import {RestaurantsInput, RestaurantsOutput} from "./dtos/restaurants.dto";

@@ -15,7 +15,8 @@ import {Verification} from "./users/entities/verfication.entity";
 import {MailModule} from './mail/mail.module';
 import * as process from "process";
 import {Restaurant} from "./restaurant/entities/restaurant.entity";
-import {Category} from "./restaurant/entities/category.entiey";
+import {Category} from "./restaurant/entities/category.entity";
+import { Dish } from "./restaurant/entities/dish.entity";
 
 
 @Module({
@@ -46,7 +47,7 @@ import {Category} from "./restaurant/entities/category.entiey";
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
       logging: process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
-      entities: [User, Verification, Restaurant, Category]
+      entities: [User, Verification, Restaurant, Category, Dish]
     }),
     GraphQLModule.forRoot({
       driver: ApolloDriver,

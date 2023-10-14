@@ -4,7 +4,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {FindOperator, Like, Repository} from "typeorm";
 import {CreateRestaurantInput, CreateRestaurantOutput} from "./dtos/create-restaurant.dto";
 import {User} from "../users/entities/user.entity";
-import {Category} from "./entities/category.entiey";
+import {Category} from "./entities/category.entity";
 import {EditRestaurantInput, EditRestaurantOutput} from "./dtos/edit-restaurant.dto";
 import {CategoryRepository} from "./repositories/category.reposigory";
 import {DeleteRestaurantInput, DeleteRestaurantOutput} from "./dtos/delete-restaurant.dto";
