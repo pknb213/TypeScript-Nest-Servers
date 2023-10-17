@@ -15,6 +15,7 @@ import {RestaurantInput, RestaurantOutput} from "./dtos/restaurant.dto";
 import {RestaurantsInput, RestaurantsOutput} from "./dtos/restaurants.dto";
 import {SearchRestaurantInput, SearchRestaurantOutput} from "./dtos/search-restaurant.dto";
 import {Raw} from "typeorm";
+import { CreateDishInput, CreateDishOutput } from "./dtos/create-dish.dto";
 
 @Injectable()
 export class RestaurantService {
@@ -172,9 +173,10 @@ export class RestaurantService {
     }: RestaurantInput): Promise<RestaurantOutput> {
         try {
             const restaurant = await this.restaurants.findOne({
-                    where: {id: restaurantId},
-                    loadRelationIds: true
-                },)
+                where: {id: restaurantId},
+                relations: ['menu'],
+                loadRelationIds: true
+            },)
             if (!restaurant) {
                 return {
                     ok: false,
@@ -212,6 +214,15 @@ export class RestaurantService {
         }
         catch {
             return {ok: false, error: "Could not search for resturants"}
+        }
+    }
+
+    async createDish(
+      owner: User,
+      createDishInput: CreateDishInput
+    ): Promise<CreateDishOutput> {
+        return {
+            ok: false
         }
     }
 }
