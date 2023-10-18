@@ -5,12 +5,18 @@ import {Restaurant} from "./entities/restaurant.entity";
 import {RestaurantService} from "./restaurant.service";
 import {CategoryRepository} from "./repositories/category.reposigory";
 import {TypeOrmExModule} from "../common/typeorm.module";
+import { Dish } from "./entities/dish.entity";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Restaurant]),
+        TypeOrmModule.forFeature([Restaurant, Dish]),
         TypeOrmExModule.forCustomRepository([CategoryRepository])
     ],
-    providers: [RestaurantResolver, CategoryResolver, DishResolver, RestaurantService]
+    providers: [
+        RestaurantResolver,
+        CategoryResolver,
+        DishResolver,
+        RestaurantService
+    ]
 })
 export class RestaurantModule {}
