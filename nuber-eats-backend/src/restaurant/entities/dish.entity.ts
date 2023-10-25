@@ -6,7 +6,7 @@ import { Restaurant } from "./restaurant.entity";
 
 @InputType("DishChoiceInputType", {isAbstract: true})
 @ObjectType()
-class DishChoice {
+export class DishChoice {
   @Field(type => String)
   name: string
   @Field(type => Int, { nullable: true})
@@ -18,10 +18,8 @@ class DishChoice {
 export class DishOption {
   @Field(type => String)
   name: string
-
   @Field(type => [DishChoice], {nullable: true})
   choices?: DishChoice[]
-
   @Field(type => Int, {nullable: true})
   extra?: number
 }
@@ -52,13 +50,14 @@ export class Dish extends CoreEntity{
   description: string
 
   @Field(type => Restaurant)
-  @ManyToOne(type => Restaurant,
+  @ManyToOne(
+    type => Restaurant,
       restaurant => restaurant.menu,
     {onDelete: "CASCADE"}
   )
   restaurant: Restaurant
 
-  @RelationId((dis: Dish) => dis.restaurant)
+  @RelationId((dish: Dish) => dish.restaurant)
   restaurantId: number
 
   @Field(type => [DishOption], {nullable: true})
