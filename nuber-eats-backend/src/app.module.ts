@@ -2,7 +2,7 @@ import {MiddlewareConsumer, Module, NestModule, RequestMethod} from '@nestjs/com
 import {GraphQLModule} from "@nestjs/graphql";
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo';
 import {TypeOrmModule} from "@nestjs/typeorm";
-import {RestaurantModule} from './restaurant/restaurant.module';
+import {RestaurantsModule} from './restaurants/restaurants.module';
 import {ConfigModule} from "@nestjs/config";
 import * as Joi from 'joi'
 import {UsersModule} from './users/users.module';
@@ -14,9 +14,9 @@ import {AuthModule} from './auth/auth.module';
 import {Verification} from "./users/entities/verfication.entity";
 import {MailModule} from './mail/mail.module';
 import * as process from "process";
-import {Restaurant} from "./restaurant/entities/restaurant.entity";
-import {Category} from "./restaurant/entities/category.entity";
-import { Dish } from "./restaurant/entities/dish.entity";
+import {Restaurant} from "./restaurants/entities/restaurant.entity";
+import {Category} from "./restaurants/entities/category.entity";
+import { Dish } from "./restaurants/entities/dish.entity";
 import { OrdersModule } from './orders/orders.module';
 import { Order } from "./orders/entities/order.entity";
 import { OrderItem } from "./orders/entities/order-item.entity";
@@ -67,7 +67,7 @@ import { OrderItem } from "./orders/entities/order-item.entity";
     }),
     AuthModule,
     UsersModule,
-    RestaurantModule,
+    RestaurantsModule,
     OrdersModule,
   ],
   controllers: [],

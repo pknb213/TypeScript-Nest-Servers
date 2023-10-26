@@ -2,8 +2,8 @@ import { Field, Float, InputType, ObjectType, registerEnumType } from "@nestjs/g
 import { Column, Entity, ManyToMany, ManyToOne } from "typeorm";
 import { CoreEntity } from "../../common/entities/core.entity";
 import { User } from "../../users/entities/user.entity";
-import { Restaurant } from "../../restaurant/entities/restaurant.entity";
-import { Dish } from "../../restaurant/entities/dish.entity";
+import { Restaurant } from "../../restaurants/entities/restaurant.entity";
+import { Dish } from "../../restaurants/entities/dish.entity";
 import { JoinTable } from "typeorm";
 import { OrderItem } from "./order-item.entity";
 import { IsEnum, IsNumber } from "class-validator";
@@ -27,7 +27,7 @@ export class Order extends CoreEntity {
     user => user.orders,
     {onDelete: 'SET NULL', nullable: true} // customer를 지워도 order가 지워지지 않음
   )
-  customer: User
+  customer?: User
 
   @Field(type => User, {nullable: true})
   @ManyToOne(
@@ -53,7 +53,7 @@ export class Order extends CoreEntity {
   @Column({nullable: true})
   @Field(type => Float, {nullable: true})
   @IsNumber()
-  total: number
+  total?: number
 
   @Column({type: "enum", enum: OrderStatus, default: OrderStatus.Pending})
   @Field(type => OrderStatus)

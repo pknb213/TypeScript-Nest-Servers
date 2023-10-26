@@ -1,7 +1,7 @@
 import {Args, Int, Mutation, Parent, Query, ResolveField, Resolver} from "@nestjs/graphql";
 import {Restaurant} from "./entities/restaurant.entity";
 import {CreateRestaurantInput, CreateRestaurantOutput} from "./dtos/create-restaurant.dto";
-import {RestaurantService} from "./restaurant.service";
+import {RestaurantsService} from "./restaurants.service";
 import {AuthUser} from "../auth/auth-user.decorator";
 import {User} from "../users/entities/user.entity";
 import {Role} from "../auth/role.decorator";
@@ -19,8 +19,8 @@ import { EditDishInput, EditDishOutput } from "./dtos/edit-dish.dto";
 import { DeleteDishInput, DeleteDishOutput } from "./dtos/delete-dish.dto";
 
 @Resolver(of => Restaurant)
-export class RestaurantResolver {
-    constructor(private readonly restaurantService: RestaurantService) {
+export class RestaurantsResolver {
+    constructor(private readonly restaurantService: RestaurantsService) {
     }
 
     @Mutation(returns => CreateRestaurantOutput)
@@ -59,7 +59,7 @@ export class RestaurantResolver {
         return this.restaurantService.allRestaurants(restaurantsInput)
     }
 
-    @Query(returns => RestaurantsOutput)
+    @Query(returns => RestaurantOutput)
     restaurant(@Args('input') restaurantInput: RestaurantInput): Promise<RestaurantOutput> {
         return this.restaurantService.findRestaurantById(restaurantInput)
     }
@@ -73,14 +73,14 @@ export class RestaurantResolver {
 @Resolver(of => Category)
 export class CategoryResolver {
     constructor(
-        private readonly restaurantService: RestaurantService
+        private readonly restaurantService: RestaurantsService
     ) {
     }
 
     @ResolveField(type => Int)
     restaurantCount(
         @Parent()
-            category: Category
+        category: Category
     ): Promise<number> {
         return this.restaurantService.countRestaurant(category)
     }
@@ -94,20 +94,13 @@ export class CategoryResolver {
     category(@Args('input') categoryInput: CategoryInput): Promise<CategoryOutput> {
         return this.restaurantService.findCategoryBySlug(categoryInput)
     }
-
-    @Query(returns => RestaurantOutput)
-    restaurant(
-        @Args('input') restaurantInput: RestaurantInput
-    ): Promise<RestaurantOutput> {
-        return this.restaurantService.findRestaurantById(restaurantInput)
-    }
 }
 
 
 @Resolver(of => Dish)
 export class DishResolver {
     constructor(
-      private readonly restaurantService: RestaurantService
+      private readonly restaurantService: RestaurantsService
     ) {}
 
     @Mutation( type => CreateDishOutput)

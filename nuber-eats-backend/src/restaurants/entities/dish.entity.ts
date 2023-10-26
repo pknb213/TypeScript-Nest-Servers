@@ -29,7 +29,7 @@ export class DishOption {
 @Entity()
 export class Dish extends CoreEntity{
   @Field(is => String)
-  @Column({unique: true})
+  @Column()
   @IsString()
   @Length(5)
   name: string
@@ -63,5 +63,4 @@ export class Dish extends CoreEntity{
   @Field(type => [DishOption], {nullable: true})
   @Column({type: "json", nullable: true})
   options?: DishOption[]
-
 }

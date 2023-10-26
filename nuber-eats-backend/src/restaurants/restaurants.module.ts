@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { CategoryResolver, DishResolver, RestaurantResolver } from "./restaurant.resolver";
+import { CategoryResolver, DishResolver, RestaurantsResolver } from "./restaurants.resolver";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {Restaurant} from "./entities/restaurant.entity";
-import {RestaurantService} from "./restaurant.service";
+import {RestaurantsService} from "./restaurants.service";
 import {CategoryRepository} from "./repositories/category.reposigory";
 import {TypeOrmExModule} from "../common/typeorm.module";
 import { Dish } from "./entities/dish.entity";
@@ -13,10 +13,10 @@ import { Dish } from "./entities/dish.entity";
         TypeOrmExModule.forCustomRepository([CategoryRepository])
     ],
     providers: [
-        RestaurantResolver,
+        RestaurantsResolver,
         CategoryResolver,
         DishResolver,
-        RestaurantService
+        RestaurantsService
     ]
 })
-export class RestaurantModule {}
+export class RestaurantsModule {}

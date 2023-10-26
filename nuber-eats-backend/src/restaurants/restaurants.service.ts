@@ -10,7 +10,6 @@ import {CategoryRepository} from "./repositories/category.reposigory";
 import {DeleteRestaurantInput, DeleteRestaurantOutput} from "./dtos/delete-restaurant.dto";
 import {AllCategoriesOutput} from "./dtos/all-categories.dto";
 import {CategoryInput, CategoryOutput} from "./dtos/category.dto";
-import {take} from "rxjs";
 import {RestaurantInput, RestaurantOutput} from "./dtos/restaurant.dto";
 import {RestaurantsInput, RestaurantsOutput} from "./dtos/restaurants.dto";
 import {SearchRestaurantInput, SearchRestaurantOutput} from "./dtos/search-restaurant.dto";
@@ -21,7 +20,7 @@ import { EditDishInput, EditDishOutput } from "./dtos/edit-dish.dto";
 import { DeleteDishInput, DeleteDishOutput } from "./dtos/delete-dish.dto";
 
 @Injectable()
-export class RestaurantService {
+export class RestaurantsService {
     constructor(
         @InjectRepository(Restaurant)
         private readonly restaurants: Repository<Restaurant>,
@@ -51,7 +50,7 @@ export class RestaurantService {
             return {
                 ok: false,
                 // error: error
-                error: "Could not create restaurant",
+                error: "Could not create restaurants",
             }
         }
     }
@@ -70,7 +69,7 @@ export class RestaurantService {
             if (!restaurant) return {ok: true}
             if (owner.id !== restaurant.ownerId) return {
                 ok: false,
-                error: "You can't edit a restaurant then you don't own"
+                error: "You can't edit a restaurants then you don't own"
             }
             let category: Category = null
             if (editRestaurantInput.categoryName) category = await this.categories.getOrCreate(
@@ -83,7 +82,7 @@ export class RestaurantService {
             }])
             return {ok: true}
         } catch {
-            return {ok: false, error: "Could not restaurant"}
+            return {ok: false, error: "Could not restaurants"}
         }
     }
 
@@ -101,12 +100,12 @@ export class RestaurantService {
             if (!restaurant) return {ok: true}
             if (owner.id !== restaurant.ownerId) return {
                 ok: false,
-                error: "You can't delete a restaurant then you don't own"
+                error: "You can't delete a restaurants then you don't own"
             }
             await this.restaurants.delete(restaurantId)
             return {ok: true}
         } catch {
-            return {ok: false, error: "Could not restaurant"}
+            return {ok: false, error: "Could not restaurants"}
         }
     }
 
@@ -114,7 +113,10 @@ export class RestaurantService {
         try {
             const categories = await this.categories.find()
 
-            return {ok: true}
+            return {
+                ok: true,
+                categories
+            }
         } catch {
             return {ok: false, error: "Could not road categories"}
         }
@@ -180,7 +182,7 @@ export class RestaurantService {
             const restaurant = await this.restaurants.findOne({
                 where: {id: restaurantId},
                 relations: ['menu'],
-                loadRelationIds: true
+                // loadRelationIds: true
             },)
             if (!restaurant) {
                 return {
@@ -195,7 +197,7 @@ export class RestaurantService {
         } catch {
             return {
                 ok: false,
-                error: "Could not find restaurant."
+                error: "Could not find restaurants."
             }
         }
     }
