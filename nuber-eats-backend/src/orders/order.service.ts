@@ -28,62 +28,65 @@ export class OrderService {
     customer: User,
     { restaurantId, items }: CreateOrderInput
   ): Promise<CreateOrderOutput> {
-    const restaurant = await this.restaurants.findOne({
-      where: {
-        id: restaurantId
-      }
-    })
-    if (!restaurant) {
-      return {
-        ok: false,
-        error: "Restaurant not found",
-      }
-    }
-    // const order = await this.orders.save(
-    //   this.orders.create({
-    //     customer,
-    //     restaurant
-    //   })
-    // )
-    // console.log(order);
-    for (const item of items) {
-      const dish = await this.dishes.findOne({
+    try {
+      const restaurant = await this.restaurants.findOne({
         where: {
-          id: item.dishId
+          id: restaurantId
         }
       })
-      if (!dish) {
+      if (!restaurant) {
         return {
           ok: false,
-          error: "Dish not found."
+          error: "Restaurant not found",
         }
       }
-      for (const itemOption of item.options) {
-        const dishOption = dish.options.find(
-          dishOption => dishOption.name === itemOption.name
-        )
-        if (dishOption) {
-          if(dishOption.extra) {
-            console.log(`$USD + ${dishOption.extra}`);
-          } else {
-            const dishOptionChoice = dishOption.choices.find(
-              optionChoice => optionChoice.name === itemOption.choice
-            )
-            if (dishOptionChoice) {
-              if (dishOptionChoice.extra) {
-                console.log(`$USD + ${dishOptionChoice.extra}`);
+      console.log(restaurant);
+      let orderFinalPrice = 0
+      for (const item of items) {
+        const dish = await this.dishes.findOne({
+          where: {
+            id: item.dishId
+          }
+        })
+        if (!dish) {
+          return {
+            ok: false,
+            error: "Dish not found."
+          }
+        }
+        let dishFinalPrice = dish.price
+        for (const itemOption of item.options) {
+          const dishOption = dish.options.find(
+            dishOption => dishOption.name === itemOption.name
+          )
+          if (dishOption) {
+            if (dishOption.extra) {
+              console.log(`$USD + ${dishOption.extra}`);
+              dishFinalPrice = dishFinalPrice + dishOption.extra
+            } else {
+              const dishOptionChoice = dishOption.choices.find(
+                optionChoice => optionChoice.name === itemOption.choice
+              )
+              if (dishOptionChoice) {
+                if (dishOptionChoice.extra) {
+                  console.log(`$USD + ${dishOptionChoice.extra}`);
+                }
               }
             }
           }
+          orderFinalPrice = orderFinalPrice + dishFinalPrice
         }
+        console.log(`\nPrice: ${orderFinalPrice}`);
+        await this.orderItems.save(
+          this.orderItems.create({
+            dish,
+            options: item.options
+          })
+        )
       }
-
-      await this.orderItems.save(
-        this.orderItems.create({
-          dish,
-          options: item.options
-        })
-      )
+    } catch (error) {
+      console.log(error);
+      return {ok: false, error: error}
     }
   }
 }
