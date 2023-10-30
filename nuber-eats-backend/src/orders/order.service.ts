@@ -42,6 +42,7 @@ export class OrderService {
       }
       console.log(restaurant);
       let orderFinalPrice = 0
+      const orderItems: OrderItem[] = []
       for (const item of items) {
         const dish = await this.dishes.findOne({
           where: {
@@ -61,7 +62,7 @@ export class OrderService {
           )
           if (dishOption) {
             if (dishOption.extra) {
-              console.log(`$USD + ${dishOption.extra}`);
+              console.log(`\n$USD + ${dishOption.extra}`);
               dishFinalPrice = dishFinalPrice + dishOption.extra
             } else {
               const dishOptionChoice = dishOption.choices.find(
@@ -69,7 +70,8 @@ export class OrderService {
               )
               if (dishOptionChoice) {
                 if (dishOptionChoice.extra) {
-                  console.log(`$USD + ${dishOptionChoice.extra}`);
+                  console.log(`\n$USD + ${dishOptionChoice.extra}`);
+                  dishFinalPrice = dishFinalPrice + dishOptionChoice.extra
                 }
               }
             }
@@ -77,16 +79,29 @@ export class OrderService {
           orderFinalPrice = orderFinalPrice + dishFinalPrice
         }
         console.log(`\nPrice: ${orderFinalPrice}`);
-        await this.orderItems.save(
+        const orderItem = await this.orderItems.save(
           this.orderItems.create({
             dish,
             options: item.options
           })
         )
+        orderItems.push(orderItem)
+      }
+      const order = await this.orders.save(
+        this.orders.create({
+          customer,
+          restaurant,
+          total: orderFinalPrice,
+          items: orderItems
+        })
+      )
+      console.log(`\nOrder: `, order)
+      return {
+        ok: true,
       }
     } catch (error) {
       console.log(error);
-      return {ok: false, error: error}
+      return {ok: false, error: 'Could not create order.'}
     }
   }
 }
