@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Order } from "./entities/order.entity";
+import { Order, OrderStatus } from "./entities/order.entity";
 import { CreateOrderInput, CreateOrderOutput } from "./dtos/create-order.dto";
 import { User, UserRole } from "../users/entities/user.entity";
 import { Restaurant } from "../restaurants/entities/restaurant.entity";
@@ -9,6 +9,7 @@ import { OrderItem } from "./entities/order-item.entity";
 import { Dish } from "../restaurants/entities/dish.entity";
 import { GetOrdersInput, GetOrdersOutput } from "./dtos/get-orders.dto";
 import { GetOrderInput, GetOrderOutput } from "./dtos/get-order.dto";
+import { EditOrderInput, EditOrderOutput } from "./dtos/edit-order.dto";
 
 @Injectable()
 export class OrderService {
@@ -157,6 +158,20 @@ export class OrderService {
     }
   }
 
+  canSeeOrder(user: User, order: Order): boolean {
+    let ok = true
+    if (user.role === UserRole.Client && order.customerId !== user.id) {
+      ok = false
+    }
+    if (user.role === UserRole.Delivery && order.driverId !== user.id) {
+      ok = false
+    }
+    if (user.role === UserRole.Delivery && order.restaurant.ownerId !== user.id) {
+      ok = false
+    }
+    return ok
+  }
+
   async getOrder(
     user: User,
     { id: orderId }: GetOrderInput
@@ -174,17 +189,7 @@ export class OrderService {
           error: 'Order not found.'
         }
       }
-      let ok = true
-      if (user.role === UserRole.Client && order.customerId !== user.id) {
-        ok = false
-      }
-      if (user.role === UserRole.Delivery && order.driverId !== user.id) {
-        ok = false
-      }
-      if (user.role === UserRole.Delivery && order.restaurant.ownerId !== user.id) {
-        ok = false
-      }
-      if ( !ok ) {
+      if ( !this.canSeeOrder(user, order) ) {
         return {
           ok: false,
           error: 'You can see that.'
@@ -195,7 +200,73 @@ export class OrderService {
         order
       }
     } catch (error) {
-      return
+      return {
+        ok: false,
+        error: "Could not get order."
+      }
     }
   }
+
+  async editOrder(
+    user: User,
+    {id: orderId, status}: EditOrderInput
+  ): Promise<EditOrderOutput> {
+    try {
+      const order = await this.orders.findOne({
+        where: {
+          id: orderId
+        },
+        relations: ["restaurant"]
+      })
+      if (!order) {
+        return {
+          ok: false,
+          error: 'Order not found.'
+        }
+      }
+      if (!this.canSeeOrder(user, order)) {
+        return {
+          ok: false,
+          error: "Can't see this."
+        }
+      }
+      let canEdit = true
+      if (user.role === UserRole.Client) {
+        canEdit = false
+      }
+      if (user.role === UserRole.Owner) {
+        if (status !== OrderStatus.Cooking && status !== OrderStatus.Cooked) {
+          canEdit = false
+        }
+      }
+      if (user.role === UserRole.Delivery) {
+        if (status !== OrderStatus.PickedUp && status !== OrderStatus.Delivered) {
+          canEdit = false
+        }
+      }
+      if (!canEdit) {
+        return {
+          ok: false,
+          error: "You can't do that."
+        }
+      }
+      await this.orders.save([
+        {
+        id: orderId,
+        status
+        }
+      ])
+      return {
+        ok: true,
+
+      }
+    } catch (error) {
+      console.log("Edit Error:", error);
+      return {
+        ok: false,
+        error: "Could not edit order"
+      }
+    }
+  }
+
 }
