@@ -33,7 +33,6 @@ export class RestaurantsResolver {
             authUser,
             createRestaurantInput
         )
-
     }
 
     @Mutation(returns => EditRestaurantOutput)
@@ -74,8 +73,7 @@ export class RestaurantsResolver {
 export class CategoryResolver {
     constructor(
         private readonly restaurantService: RestaurantsService
-    ) {
-    }
+    ) {}
 
     @ResolveField(type => Int)
     restaurantCount(

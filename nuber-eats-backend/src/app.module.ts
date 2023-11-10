@@ -54,29 +54,46 @@ import { Context } from "joi";
       entities: [User, Verification, Restaurant, Category, Dish, Order, OrderItem]
     }),
     GraphQLModule.forRoot({
-      // installSubscriptionHandler: true,
       driver: ApolloDriver,
       autoSchemaFile: true,
+      // Todo: 더 이상 지원 안함
+      // installSubscriptionHandlers: true
       subscriptions: {
+      //   // Todo: Graphql-ws가 아직 graphql playground 호환이 안되므로, 임시로 같이 사용한다.
+      //   'subscriptions-transport-ws': {
+      //     onConnect: (connectionParams) => {
+      //       connectionParams.user = ["pknb213"]
+      //       console.log("Context:", connectionParams);
+      //       // return connectionParams
+      //       return connectionParams
+      //       // return {token: connectionParams['X-JWT']}
+      //       // const TOKEN_KEY = 'x-jwt'
+      //       // console.log({ user: connectionParams[TOKEN_KEY]});
+      //       // return { user: connectionParams[TOKEN_KEY]}
+      //     }
+      //   },
         'graphql-ws': {
           onConnect: (context: Context) => {
-            console.log(context);
-            const TOKEN_KEY = 'X-JWT'
+            // console.log("Context:", context);
             const {connectionParams, extra} = context
-            extra.token = connectionParams[TOKEN_KEY]
+            extra.user = {}
+            extra.token = connectionParams
           }
         }
       },
-      context: ({req, extra, connection}) => {
+      // context: ({ req, connection, extra, webSocket, context, connectionParams, token }) => {
+      //   console.log("Req:", req);
+      //   console.log("Extra:", extra);
+      //   console.log("Conn:", connection);
+      //   console.log("WS:", webSocket);
+      //   console.log("Context:", context);
+      //   console.log("CP:", connectionParams);
+      //   console.log("Token:", token);
+      // }
+      context: ({req, extra}) => {
         const TOKEN_KEY = 'x-jwt'
-        console.log(req.headers[TOKEN_KEY]);
-        console.log("Extra:", extra);
-        console.log("Conn:", connection);
-        if (req) {
-          return { token: req ? req.headers[TOKEN_KEY]: extra.token }
-        } else {
-          console.log(extra, connection);
-        }
+        console.log(req ? req.headers[TOKEN_KEY] : extra.token[TOKEN_KEY]);
+        return { token: req ? req.headers[TOKEN_KEY]: extra.token[TOKEN_KEY] }
       },
     }),
     JwtModule.forRoot({
