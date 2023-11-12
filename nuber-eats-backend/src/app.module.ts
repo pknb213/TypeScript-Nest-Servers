@@ -108,6 +108,7 @@ import { Context } from "joi";
     UsersModule,
     RestaurantsModule,
     OrdersModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],
