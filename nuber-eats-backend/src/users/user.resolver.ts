@@ -21,7 +21,7 @@ export class UsersResolver {
     @Mutation(returns => CreateAccountOutput)
     async createAccount(
         @Args('input')
-            createAccountInput: CreateAccountInput
+        createAccountInput: CreateAccountInput
     ): Promise<CreateAccountOutput> {
         return this.usersService.createAccount(createAccountInput)
     }

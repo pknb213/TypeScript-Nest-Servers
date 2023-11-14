@@ -273,7 +273,9 @@ export class OrderService {
           })
         }
       }
-      await this.pubSub.publish(NEW_ORDER_UPDATE, {orderUpdates: newOrder})
+      await this.pubSub.publish(NEW_ORDER_UPDATE, {
+        orderUpdates: newOrder
+      })
       return {
         ok: true,
 
