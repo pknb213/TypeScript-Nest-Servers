@@ -12,6 +12,7 @@ import { Inject } from "@nestjs/common";
 import { NEW_COOKED_ORDER, NEW_ORDER_UPDATE, NEW_PENDING_ORDER, PUB_SUB } from "../common/common.constants";
 import { PubSub } from "graphql-subscriptions";
 import { OrderUpdatesInput } from "./dtos/order-updates.dto";
+import { TakeOrderInput, TakeOrderOutput } from "./dtos/take-order.dto";
 @Resolver(of => Order)
 export class OrderResolver {
   constructor(
@@ -97,5 +98,14 @@ export class OrderResolver {
     @Args('input') orderUpdateInput: OrderUpdatesInput
   ){
     return this.pubsub.asyncIterator(NEW_ORDER_UPDATE)
+  }
+
+  @Mutation(returns => TakeOrderOutput)
+  @Role(['Delivery'])
+  takeOrder(
+    @AuthUser() driver: User,
+    @Args('input') takeOrderInput: TakeOrderInput
+  ): Promise<TakeOrderOutput> {
+    return this.orderService.takeOrder(driver, takeOrderInput)
   }
 }
