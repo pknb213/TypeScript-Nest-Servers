@@ -177,10 +177,10 @@ describe("User Service", () => {
             expect(result).toEqual({ok: true, user: findByIdArgs})
         });
         it('should fail if no user if found', async function () {
-            usersRepository.findOneOrFail.mockResolvedValue(new Error)
+            usersRepository.findOneOrFail.mockRejectedValue(new Error)
             const result = await service.findById(1)
             /** Tdoo: 잘 모르겠다는 병신 같은 이유 때문에 findOneOrFail() 결과가 Try Catch 걸리지 않는다 씨발 */
-            // expect(result).toEqual({ok: false, error: "User Not Found"})
+            expect(result).toEqual({ok: false, error: "User Not Found"})
         });
 
     })
@@ -235,7 +235,7 @@ describe("User Service", () => {
             expect(result).toEqual({ok: true})
         });
         it('should fail on exception',async function () {
-            usersRepository.findOne.mockResolvedValue(new Error)
+            usersRepository.findOne.mockRejectedValue(new Error)
             const result = await service.editProfile(1, {email: '12'})
             expect(result).toEqual({ok: false, error: "Could not update profile"})
         });
