@@ -7,6 +7,7 @@ import {getRepositoryToken} from "@nestjs/typeorm";
 import {User} from "../src/users/entities/user.entity";
 import {Verification} from "../src/users/entities/verfication.entity";
 
+
 jest.mock('got', () => {
     return {
         post: jest.fn()
