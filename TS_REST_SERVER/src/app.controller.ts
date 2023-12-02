@@ -16,8 +16,8 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get(`events`)
-  getEvents() {
-    return this.eventsGateway.onEvent("Client", "Data")
-  }
+  // @Get(`events`)
+  // getEvents() {
+  //   return this.eventsGateway.onEvent("Client", "Data")
+  // }
 }
