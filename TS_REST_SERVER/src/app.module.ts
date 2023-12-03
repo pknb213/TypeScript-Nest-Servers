@@ -9,6 +9,14 @@ import { EventsModule } from './ws/events/events.module';
 import {GraphQLModule} from "@nestjs/graphql";
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo';
 import {EventsGateway} from "./ws/events/events.gateway";
+import { UserModule } from './rest/user/user.module';
+import { UserModule } from './product/user/user.module';
+import { ProductsModule } from './rest/products/products.module';
+import { UsersModule } from './product/users/users.module';
+import { UsersModule } from './rest/users/users.module';
+import { PaymentsModule } from './rest/payments/payments.module';
+import { CommonController } from './rest/common/common.controller';
+import { CommonModule } from './rest/common/common.module';
 
 @Module({
   imports: [
@@ -26,8 +34,13 @@ import {EventsGateway} from "./ws/events/events.gateway";
       DomainModule,
       EventsModule,
       PodcastsModule,
+      UserModule,
+      ProductsModule,
+      UsersModule,
+      PaymentsModule,
+      CommonModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, CommonController],
   providers: [AppService, EventsGateway],
 })
 export class AppModule {}

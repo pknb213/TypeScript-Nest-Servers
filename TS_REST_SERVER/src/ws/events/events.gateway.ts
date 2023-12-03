@@ -13,13 +13,6 @@ import {
 import { Server, Socket } from 'socket.io';
 import * as WebSocket from "ws";
 
-// export class SocketIoAdapter extends IoAdapter {
-//     createIOServer(port: number, options?: any): any {
-//         const server = super.createIOServer(port, options);
-//
-//         return server;
-//     }
-// }
 
 // @WebSocketGateway(3001)
 @WebSocketGateway(3001, {
