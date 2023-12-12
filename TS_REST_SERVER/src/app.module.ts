@@ -17,6 +17,7 @@ import { UsersModule } from './rest/users/users.module';
 import { PaymentsModule } from './rest/payments/payments.module';
 import { CommonController } from './rest/common/common.controller';
 import { CommonModule } from './rest/common/common.module';
+import { AuthModule } from './global/auth/auth.module';
 
 @Module({
   imports: [
