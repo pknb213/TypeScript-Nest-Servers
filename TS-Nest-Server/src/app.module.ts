@@ -20,7 +20,7 @@ import { JwtModule } from './global/jwt/jwt.module';
   imports: [
       TypeOrmModule.forRoot({
         type: 'sqlite',
-        database: 'db.sqlite',
+        database: 'db.sqlite3',
         logging: true,
         synchronize: true,
         entities: [UserEntity]

@@ -4,6 +4,9 @@ import {SignUpInputType, SignUpOutputType} from "./dtos/sign-up.dto";
 import {SignInInputType, SignInOutputType} from "./dtos/sign-in.dto";
 import {SignOutInputType, SignOutOutputType} from "./dtos/sign-out.dto";
 import {GetAllUsersOutputType, GetUserOutputType} from "./dtos/get-user.dto";
+import {Role} from "../../global/auth/role.decorator";
+import {AuthUser} from "../../global/auth/auth.decorator";
+import {UserEntity} from "./entities/user.entity";
 
 @Controller('/users')
 export class UsersController {
@@ -18,8 +21,12 @@ export class UsersController {
         return this.usersService.signUp(signUpInputType)
     }
 
+    @Role(["Owner"])
     @Get('/all')
-    async getUsers(): Promise<GetAllUsersOutputType> {
+    async getUsers(
+        @AuthUser() user: UserEntity
+    ): Promise<GetAllUsersOutputType> {
+        console.log(user)
         return this.usersService.getAllUsers()
     }
 

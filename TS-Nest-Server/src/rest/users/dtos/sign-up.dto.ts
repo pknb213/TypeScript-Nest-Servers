@@ -1,8 +1,8 @@
 import {UserEntity} from "../entities/user.entity";
-import {PickType} from "@nestjs/mapped-types";
+import {PickType, PartialType} from "@nestjs/mapped-types";
 import {CommonOutputType} from "../../common/dtos/common-output.dto";
 
-export class SignUpInputType extends PickType(UserEntity, [
+export class SignUpInputType extends PickType(PartialType(UserEntity), [
     'email',
     'password',
     'role',

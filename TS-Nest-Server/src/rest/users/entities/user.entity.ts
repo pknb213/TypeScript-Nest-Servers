@@ -3,12 +3,18 @@ import {BeforeInsert, BeforeUpdate, Column, Entity} from "typeorm";
 import {InternalServerErrorException} from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 
+export enum UserRole {
+    Client = 'Client',
+    Owner = 'Owner',
+}
+
+
 @Entity()
 export class UserEntity extends CommonEntity {
     @Column({nullable: true}) name: string
     @Column() email: string
     @Column() password: string
-    @Column() role: string
+    @Column({type: 'simple-enum', enum: UserRole, default: 'Client'}) role: UserRole
     @Column({default: false}) verified: boolean
     @Column({nullable: true}) age: number
     @Column({nullable: true}) gender: string
