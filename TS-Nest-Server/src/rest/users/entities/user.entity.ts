@@ -8,7 +8,7 @@ export enum UserRole {
     Owner = 'Owner',
 }
 
-
+export type Gender = "men" | "woman" | null
 @Entity()
 export class UserEntity extends CommonEntity {
     @Column({nullable: true}) name: string
@@ -17,7 +17,7 @@ export class UserEntity extends CommonEntity {
     @Column({type: 'simple-enum', enum: UserRole, default: 'Client'}) role: UserRole
     @Column({default: false}) verified: boolean
     @Column({nullable: true}) age: number
-    @Column({nullable: true}) gender: string
+    @Column({nullable: true}) gender: Gender
     @Column({nullable: true}) address: string
 
     @BeforeInsert()

@@ -7,6 +7,7 @@ import {GetAllUsersOutputType, GetUserOutputType} from "./dtos/get-user.dto";
 import {Role} from "../../global/auth/role.decorator";
 import {AuthUser} from "../../global/auth/auth.decorator";
 import {UserEntity} from "./entities/user.entity";
+import {EditUserInputType, EditUserOutputType} from "./dtos/edit-user.dto";
 
 @Controller('/users')
 export class UsersController {
@@ -24,18 +25,17 @@ export class UsersController {
     @Role(["Owner"])
     @Get('/all')
     async getUsers(
-        @AuthUser() user: UserEntity
     ): Promise<GetAllUsersOutputType> {
-        console.log(user)
         return this.usersService.getAllUsers()
     }
 
-    @Get(':id')
-    async getUser(
-        @Param('id') userId: number
-    ): Promise<GetUserOutputType> {
-        console.log(userId)
-        return this.usersService.getUser(userId)
+    @Role(["Any"])
+    @Get("/me")
+    async me(
+        @AuthUser() user: UserEntity
+    ): Promise<UserEntity> {
+        console.log("???????", user)
+        return user
     }
 
     @Post("/login")
@@ -52,11 +52,21 @@ export class UsersController {
         return this.usersService.signOut(signOutInputType)
     }
 
-    // Todo: Edit User    1. DTO, 2. Service
-    @Put(":id")
-    async editUser(
-        @Body() editUserInputType: any
-    ): Promise<any> {
-        return this.usersService.editUser(editUserInputType)
+    @Role(["Owner"])
+    @Get(':id')
+    async getUser(
+        @Param('id') userId: number
+    ): Promise<GetUserOutputType> {
+        return this.usersService.getUser(userId)
     }
+
+    @Role(["Any"])
+    @Put()
+    async editUser(
+        @AuthUser() user: UserEntity,
+        @Body() editUserInputType: EditUserInputType
+    ): Promise<EditUserOutputType> {
+        return this.usersService.editUser(user.id, editUserInputType)
+    }
+
 }

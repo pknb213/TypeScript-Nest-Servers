@@ -7,6 +7,7 @@ import {InjectRepository} from "@nestjs/typeorm";
 import {UserEntity} from "./entities/user.entity";
 import {Repository} from "typeorm";
 import {JwtService} from "../../global/jwt/jwt.service";
+import {EditUserInputType, EditUserOutputType} from "./dtos/edit-user.dto";
 
 @Injectable()
 export class UsersService {
@@ -141,13 +142,32 @@ export class UsersService {
         }
     }
 
-    async editUser({
-
-   }: any): Promise<any> {
+    async editUser(
+        userId: number, {
+            name,
+            email,
+            password,
+            age,
+            gender,
+            address
+   }: EditUserInputType): Promise<EditUserOutputType> {
         try {
+            if (!name && !email && !password && !age && !gender && !address)
+                return { ok: false, error: "Body 비어있다"}
+            // Todo: 여기다 추가로 각 파라미터에 대한 Validate를 설정해야 한다.
+            // 예로 들면 Gender는 men, woman만 가능하고, 나이 범위, 길이 등
+            const {data: user} = await this.getUser(userId)
+            user.name = name ? name : user.name
+            user.email = email ? email : user.email
+            user.password = password ? password : user.password
+            user.age = age ? age : user.age
+            user.gender = gender ? gender : user.gender
+            user.address = address ? address : user.address
+            user.updatedAt = new Date()
+            await this.users.save(user)
             return {
                 ok: true,
-                data: 1
+                data: userId
             }
         } catch (e) {
             console.log(e)
