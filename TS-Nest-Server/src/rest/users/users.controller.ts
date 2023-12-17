@@ -1,13 +1,13 @@
 import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
 import {UsersService} from "./users.service";
-import {SignUpInputType, SignUpOutputType} from "./dtos/sign-up.dto";
-import {SignInInputType, SignInOutputType} from "./dtos/sign-in.dto";
-import {SignOutInputType, SignOutOutputType} from "./dtos/sign-out.dto";
-import {GetAllUsersOutputType, GetUserOutputType} from "./dtos/get-user.dto";
+import {SignUpInput, SignUpOutput} from "./dtos/sign-up.dto";
+import {SignInInput, SignInOutput} from "./dtos/sign-in.dto";
+import {SignOutInput, SignOutOutput} from "./dtos/sign-out.dto";
+import {GetAllUsersOutput, GetUserOutput} from "./dtos/get-user.dto";
 import {Role} from "../../global/auth/role.decorator";
 import {AuthUser} from "../../global/auth/auth.decorator";
 import {UserEntity} from "./entities/user.entity";
-import {EditUserInputType, EditUserOutputType} from "./dtos/edit-user.dto";
+import {EditUserInput, EditUserOutput} from "./dtos/edit-user.dto";
 
 @Controller('/users')
 export class UsersController {
@@ -17,15 +17,15 @@ export class UsersController {
 
     @Post()
     async signUp(
-        @Body() signUpInputType: SignUpInputType
-    ): Promise<SignUpOutputType> {
-        return this.usersService.signUp(signUpInputType)
+        @Body() signUpInput: SignUpInput
+    ): Promise<SignUpOutput> {
+        return this.usersService.signUp(signUpInput)
     }
 
     @Role(["Owner"])
     @Get('/all')
     async getUsers(
-    ): Promise<GetAllUsersOutputType> {
+    ): Promise<GetAllUsersOutput> {
         return this.usersService.getAllUsers()
     }
 
@@ -40,23 +40,23 @@ export class UsersController {
 
     @Post("/login")
     async signIn(
-        @Body() signInInputType: SignInInputType
-    ): Promise<SignInOutputType> {
-        return this.usersService.signIn(signInInputType)
+        @Body() signInInput: SignInInput
+    ): Promise<SignInOutput> {
+        return this.usersService.signIn(signInInput)
     }
 
     @Delete("/logout")
     async signOut(
-        @Body() signOutInputType: SignOutInputType
-    ): Promise<SignOutOutputType> {
-        return this.usersService.signOut(signOutInputType)
+        @Body() signOutInput: SignOutInput
+    ): Promise<SignOutOutput> {
+        return this.usersService.signOut(signOutInput)
     }
 
     @Role(["Owner"])
     @Get(':id')
     async getUser(
         @Param('id') userId: number
-    ): Promise<GetUserOutputType> {
+    ): Promise<GetUserOutput> {
         return this.usersService.getUser(userId)
     }
 
@@ -64,9 +64,9 @@ export class UsersController {
     @Put()
     async editUser(
         @AuthUser() user: UserEntity,
-        @Body() editUserInputType: EditUserInputType
-    ): Promise<EditUserOutputType> {
-        return this.usersService.editUser(user.id, editUserInputType)
+        @Body() editUserInput: EditUserInput
+    ): Promise<EditUserOutput> {
+        return this.usersService.editUser(user.id, editUserInput)
     }
 
 }

@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import {SignUpInputType, SignUpOutputType} from "./dtos/sign-up.dto";
-import {SignInInputType, SignInOutputType} from "./dtos/sign-in.dto";
-import {SignOutInputType, SignOutOutputType} from "./dtos/sign-out.dto";
-import {GetAllUsersOutputType, GetUserOutputType} from "./dtos/get-user.dto";
+import {SignUpInput, SignUpOutput} from "./dtos/sign-up.dto";
+import {SignInInput, SignInOutput} from "./dtos/sign-in.dto";
+import {SignOutInput, SignOutOutput} from "./dtos/sign-out.dto";
+import {GetAllUsersOutput, GetUserOutput} from "./dtos/get-user.dto";
 import {InjectRepository} from "@nestjs/typeorm";
 import {UserEntity} from "./entities/user.entity";
 import {Repository} from "typeorm";
 import {JwtService} from "../../global/jwt/jwt.service";
-import {EditUserInputType, EditUserOutputType} from "./dtos/edit-user.dto";
+import {EditUserInput, EditUserOutput} from "./dtos/edit-user.dto";
 
 @Injectable()
 export class UsersService {
@@ -20,7 +20,7 @@ export class UsersService {
         email,
         password,
         role,
-    }: SignUpInputType): Promise<SignUpOutputType> {
+    }: SignUpInput): Promise<SignUpOutput> {
         try {
             if(!await this.existUser(email)) {
                 return { ok: false, error: `There is a user with that email already` };
@@ -62,7 +62,7 @@ export class UsersService {
     async signIn({
         email,
         password
-     }: SignInInputType): Promise<SignInOutputType> {
+     }: SignInInput): Promise<SignInOutput> {
         try {
             const user = await this.users.findOne({
                 where: {
@@ -92,7 +92,7 @@ export class UsersService {
         }
     }
 
-    async signOut({id}: SignOutInputType): Promise<SignOutOutputType> {
+    async signOut({id}: SignOutInput): Promise<SignOutOutput> {
         try {
             const { ok, error, data } = await this.getUser(id)
             if (!ok) return { ok, error }
@@ -108,7 +108,7 @@ export class UsersService {
         }
     }
 
-    async getUser(userId: number): Promise<GetUserOutputType> {
+    async getUser(userId: number): Promise<GetUserOutput> {
         try {
             const user = await this.users.findOne({
                 where: {
@@ -126,7 +126,7 @@ export class UsersService {
         }
     }
 
-    async getAllUsers(): Promise<GetAllUsersOutputType> {
+    async getAllUsers(): Promise<GetAllUsersOutput> {
         try {
             const users = await this.users.find()
             return {
@@ -150,7 +150,7 @@ export class UsersService {
             age,
             gender,
             address
-   }: EditUserInputType): Promise<EditUserOutputType> {
+   }: EditUserInput): Promise<EditUserOutput> {
         try {
             if (!name && !email && !password && !age && !gender && !address)
                 return { ok: false, error: "Body 비어있다"}

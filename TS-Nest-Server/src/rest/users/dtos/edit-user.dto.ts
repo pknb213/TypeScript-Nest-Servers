@@ -1,9 +1,9 @@
-import {CommonOutputType} from "../../common/dtos/common-output.dto";
-import {CommonInputType} from "../../common/dtos/common-input.dto";
+import {CommonOutput} from "../../common/dtos/common-output.dto";
+import {CommonInput} from "../../common/dtos/common-input.dto";
 import {PickType} from "@nestjs/mapped-types";
 import {UserEntity} from "../entities/user.entity";
 
-export class EditUserInputType extends PickType(UserEntity, [
+export class EditUserInput extends PickType(UserEntity, [
     "name",
     "email",
     "password",
@@ -12,6 +12,6 @@ export class EditUserInputType extends PickType(UserEntity, [
     "address"
 ]) {}
 
-export class EditUserOutputType extends CommonOutputType {
+export class EditUserOutput extends CommonOutput {
 
 }

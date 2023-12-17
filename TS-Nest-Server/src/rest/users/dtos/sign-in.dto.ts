@@ -1,12 +1,12 @@
-import {CommonOutputType} from "../../common/dtos/common-output.dto";
+import {CommonOutput} from "../../common/dtos/common-output.dto";
 import {PickType} from "@nestjs/mapped-types";
 import {UserEntity} from "../entities/user.entity";
 
-export class SignInInputType extends PickType(
+export class SignInInput extends PickType(
     UserEntity,
     ["email","password"]
 ){}
 
-export class SignInOutputType extends CommonOutputType{
+export class SignInOutput extends CommonOutput{
     token?: string
 }

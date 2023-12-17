@@ -1,5 +1,9 @@
-import { Resolver } from '@nestjs/graphql';
+import {Mutation, Query, Resolver} from '@nestjs/graphql';
 import {ProductsService} from "./products.service";
+import {CreateProductInput, CreateProductOutput} from "./dtos/create-product.dto";
+import {SearchAllProductOutput, SearchProductInput, SearchProductOutput} from "./dtos/search-product.dto";
+import {EditProductInput, EditProductOutput} from "./dtos/edit-product.dto";
+import {DeleteProductInput, DeleteProductOutput} from "./dtos/delete-product.dto";
 
 @Resolver()
 export class ProductsResolver {
@@ -7,53 +11,64 @@ export class ProductsResolver {
         private readonly productsService: ProductsService
     ) {}
 
-    // Todo: CRUD
-    
-    /*
+    @Mutation()
+    async crateProduct(
+        createProductInput: CreateProductInput
+    ): Promise<CreateProductOutput> {
+        try {
 
-    @Mutation(returns => CreateRestaurantOutput)
-    @Role(['Owner'])
-    async createRestaurant(
-        @AuthUser() authUser: User,
-        @Args('input') createRestaurantInput: CreateRestaurantInput
-    ): Promise<CreateRestaurantOutput> {
-        return this.restaurantService.createRestaurant(
-            authUser,
-            createRestaurantInput
-        )
+            return {ok: true, data: 1}
+        } catch (e) {
+            console.log(e)
+            return {ok: false, error: e}
+        }
     }
 
-    @Mutation(returns => EditRestaurantOutput)
-    @Role(['Owner'])
-    async editRestaurant(
-        @AuthUser() owner: User,
-        @Args('input') editRestaurantInput: EditRestaurantInput
-    ): Promise<EditRestaurantOutput> {
-        return this.restaurantService.editRestaurant(owner, editRestaurantInput)
+    @Query()
+    async getProduct(
+        searchProductInput: SearchProductInput
+    ): Promise<SearchProductOutput> {
+        try {
+            return {ok: true, data: 1}
+        } catch (e) {
+            console.log(e)
+            return {ok: false, error: e}
+        }
     }
 
-    @Mutation(returns => DeleteRestaurantOutput)
-    @Role(['Owner'])
-    async deleteRestaurant(
-        @AuthUser() owner: User,
-        @Args('input') deleteRestaurantInput: DeleteRestaurantInput
-    ): Promise<DeleteRestaurantOutput> {
-        return this.restaurantService.deleteRestaurant(owner, deleteRestaurantInput)
+    @Query()
+    async getAllProduct(
+        searchProductInput: SearchAllProductOutput
+    ): Promise<SearchAllProductOutput> {
+        try {
+            return {ok: true, data: 1}
+        } catch (e) {
+            console.log(e)
+            return {ok: false, error: e}
+        }
     }
 
-    @Query(returns => RestaurantsOutput)
-    restaurants(@Args('input') restaurantsInput: RestaurantsInput): Promise<RestaurantsOutput> {
-        return this.restaurantService.allRestaurants(restaurantsInput)
+    @Mutation()
+    async editProduct(
+        editProductInput: EditProductInput
+    ): Promise<EditProductOutput> {
+        try {
+            return {ok: true, data: 1}
+        } catch (e) {
+            console.log(e)
+            return {ok: false, error: e}
+        }
     }
 
-    @Query(returns => RestaurantOutput)
-    restaurant(@Args('input') restaurantInput: RestaurantInput): Promise<RestaurantOutput> {
-        return this.restaurantService.findRestaurantById(restaurantInput)
+    @Mutation()
+    async deleteProduct(
+        deleteProductInput: DeleteProductInput
+    ): Promise<DeleteProductOutput> {
+        try {
+            return {ok: true, data: 1}
+        } catch (e) {
+            console.log(e)
+            return {ok: false, error: e}
+        }
     }
-
-    @Query(returns => SearchRestaurantOutput)
-    searchRestaurant(@Args('input') searchRestaurantInput: SearchRestaurantInput): Promise<SearchRestaurantOutput> {
-        return this.restaurantService.searchRestaurantByName(searchRestaurantInput)
-    }
-     */
 }

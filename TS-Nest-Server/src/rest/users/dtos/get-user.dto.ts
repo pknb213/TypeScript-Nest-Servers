@@ -1,10 +1,10 @@
-import {CommonOutputType} from "../../common/dtos/common-output.dto";
+import {CommonOutput} from "../../common/dtos/common-output.dto";
 import {UserEntity} from "../entities/user.entity";
 
-export class GetUserOutputType extends CommonOutputType{
+export class GetUserOutput extends CommonOutput{
     user?: UserEntity
 }
 
-export class GetAllUsersOutputType {
+export class GetAllUsersOutput {
 
 }

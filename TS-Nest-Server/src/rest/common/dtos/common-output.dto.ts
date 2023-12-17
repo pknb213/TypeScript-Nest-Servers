@@ -1,4 +1,4 @@
-export class CommonOutputType {
+export class CommonOutput {
     ok: boolean
     error?: string
     data?: any

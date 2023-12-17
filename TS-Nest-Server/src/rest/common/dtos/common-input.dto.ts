@@ -1,3 +1,3 @@
-export class CommonInputType {
+export class CommonInput {
 
 }
