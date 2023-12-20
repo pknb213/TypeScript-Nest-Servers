@@ -15,6 +15,7 @@ import { CommonModule } from './rest/common/common.module';
 import { AuthModule } from './global/auth/auth.module';
 import {UserEntity} from "./rest/users/entities/user.entity";
 import { JwtModule } from './global/jwt/jwt.module';
+import { KafkaModule } from './rest/kafka/kafka.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { JwtModule } from './global/jwt/jwt.module';
       JwtModule.forRoot({
         privateKey: "8mMJe5dMGORyoRPLvngA8U4aLTF3WasX"
       }),
+      KafkaModule,
   ],
   controllers: [AppController],
   providers: [AppService, EventsGateway],

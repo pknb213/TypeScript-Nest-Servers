@@ -4,6 +4,7 @@ import {CreateProductInput, CreateProductOutput} from "./dtos/create-product.dto
 import {SearchAllProductOutput, SearchProductInput, SearchProductOutput} from "./dtos/search-product.dto";
 import {EditProductInput, EditProductOutput} from "./dtos/edit-product.dto";
 import {DeleteProductInput, DeleteProductOutput} from "./dtos/delete-product.dto";
+import {Product} from "./entities/product.entity";
 
 @Resolver()
 export class ProductsResolver {
@@ -11,12 +12,11 @@ export class ProductsResolver {
         private readonly productsService: ProductsService
     ) {}
 
-    @Mutation()
+    @Mutation(returns => Product)
     async crateProduct(
         createProductInput: CreateProductInput
     ): Promise<CreateProductOutput> {
         try {
-
             return {ok: true, data: 1}
         } catch (e) {
             console.log(e)
@@ -24,7 +24,7 @@ export class ProductsResolver {
         }
     }
 
-    @Query()
+    @Query(returns => Product)
     async getProduct(
         searchProductInput: SearchProductInput
     ): Promise<SearchProductOutput> {
@@ -36,7 +36,7 @@ export class ProductsResolver {
         }
     }
 
-    @Query()
+    @Query(returns => Product)
     async getAllProduct(
         searchProductInput: SearchAllProductOutput
     ): Promise<SearchAllProductOutput> {
@@ -48,7 +48,7 @@ export class ProductsResolver {
         }
     }
 
-    @Mutation()
+    @Mutation(returns => Product)
     async editProduct(
         editProductInput: EditProductInput
     ): Promise<EditProductOutput> {
@@ -60,7 +60,7 @@ export class ProductsResolver {
         }
     }
 
-    @Mutation()
+    @Mutation(returns => Product)
     async deleteProduct(
         deleteProductInput: DeleteProductInput
     ): Promise<DeleteProductOutput> {

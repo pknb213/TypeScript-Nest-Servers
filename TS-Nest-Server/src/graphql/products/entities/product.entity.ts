@@ -1,5 +1,5 @@
 import {Field, InputType, ObjectType} from "@nestjs/graphql";
-import {Column, Entity, ManyToOne} from "typeorm";
+import {Any, Column, Entity, ManyToOne} from "typeorm";
 import {CommonEntity} from "../../common/entities/common.entity";
 
 @InputType('ProductInputType', {isAbstract: true})
@@ -22,7 +22,7 @@ export class Product extends CommonEntity {
     @Column()
     price: number
 
-    @Field()
+    @Field(is => String)
     // Todo: Seller Entity를 만들어야 겠다.
     // @ManyToOne(
     //   type => ,
@@ -30,5 +30,5 @@ export class Product extends CommonEntity {
     //   {onDelete: "CASCADE"}
     // )
     @Column()
-    seller: any
+    seller: string
 }
