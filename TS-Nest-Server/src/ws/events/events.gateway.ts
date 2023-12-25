@@ -53,7 +53,7 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect, 
     }
 
     afterInit (server: any) {
-        console.log("Init", server)
+        console.log("Init Websocket", server.clients)
     }
     handleConnection(client: Socket) {
         console.log("Connection")

@@ -10,12 +10,16 @@ import {ApolloDriver} from '@nestjs/apollo';
 import {EventsGateway} from "./ws/events/events.gateway";
 import { ProductsModule } from './graphql/products/products.module';
 import { UsersModule } from './rest/users/users.module';
-import { PaymentsModule } from './rest/payments/payments.module';
 import { CommonModule } from './rest/common/common.module';
 import { AuthModule } from './global/auth/auth.module';
 import {UserEntity} from "./rest/users/entities/user.entity";
 import { JwtModule } from './global/jwt/jwt.module';
 import { KafkaModule } from './rest/kafka/kafka.module';
+import { PaymentsModule } from './event/payments/payments.module';
+import { LogisticsModule } from './event/logistics/logistics.module';
+import { DeliveriesModule } from './event/deliveries/deliveries.module';
+import { ClientsModule } from './event/clients/clients.module';
+import { ItemsModule } from './event/items/items.module';
 
 @Module({
   imports: [
@@ -41,7 +45,11 @@ import { KafkaModule } from './rest/kafka/kafka.module';
       JwtModule.forRoot({
         privateKey: "8mMJe5dMGORyoRPLvngA8U4aLTF3WasX"
       }),
-      KafkaModule,
+      // KafkaModule,
+      LogisticsModule,
+      DeliveriesModule,
+      ClientsModule,
+      ItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService, EventsGateway],
