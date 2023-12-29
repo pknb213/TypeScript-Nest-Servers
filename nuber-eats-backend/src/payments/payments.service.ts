@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Payment } from "./entities/payment.entity";
-import { Repository } from "typeorm";
+import {LessThan, Repository} from "typeorm";
 import { Mutation } from "@nestjs/graphql";
 import { CreatePaymentInput, CreatePaymentOutput } from "./dtos/create-payment.dto";
 import { Role } from "../auth/role.decorator";
@@ -42,11 +42,18 @@ export class PaymentsService {
           error: 'You are not allowed to do this.'
         }
       }
-      await this.restaurants.save(this.payments.create({
-        transactionId,
-        user: owner,
-        restaurant
-      }))
+      await this.payments.save(
+          this.payments.create({
+            transactionId,
+            user: owner,
+            restaurant
+          })
+      )
+      restaurant.isPromoted = true
+      const date = new Date()
+      date.setDate(date.getDate() + 7)
+      restaurant.promotedUntil = date
+      await this.restaurants.save(restaurant)
       return {
         ok: true,
       }
@@ -80,5 +87,21 @@ export class PaymentsService {
   @Interval(5000)
   async checkForPayments2() {
     console.log('Checking for payments....')
+  }
+
+  @Interval(2000)
+  async checkPromotedRestaurants() {
+    const restaurants = await this.restaurants.find({
+      where: {
+        isPromoted: true,
+        promotedUntil: LessThan(new Date()),
+      }
+    })
+    console.log(restaurants)
+    for (const restaurant of restaurants) {
+      restaurant.isPromoted = false
+      restaurant.promotedUntil = null
+      await this.restaurants.save(restaurant)
+    }
   }
 }
