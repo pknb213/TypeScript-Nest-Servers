@@ -20,6 +20,7 @@ import { LogisticsModule } from './event/logistics/logistics.module';
 import { DeliveriesModule } from './event/deliveries/deliveries.module';
 import { ClientsModule } from './event/clients/clients.module';
 import { ItemsModule } from './event/items/items.module';
+import { OrdersModule } from './event/orders/orders.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { ItemsModule } from './event/items/items.module';
       DeliveriesModule,
       ClientsModule,
       ItemsModule,
+      OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService, EventsGateway],
