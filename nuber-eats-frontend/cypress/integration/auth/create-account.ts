@@ -15,7 +15,7 @@ describe("Create Account", () => {
     user.findByRole("alert").should("have.text", "Password is required");
   });
   it("should be able to create account and login", () => {
-    user.intercept("http://localhost:4000/graphql", (req) => {
+    user.intercept("http://localhost:3000/graphql", (req) => {
       const { operationName } = req.body;
       if (operationName && operationName === "createAccountMutation") {
         req.reply((res) => {
